@@ -1,4 +1,15 @@
+---
+title: Bank Churn Predictor
+emoji: 📈
+colorFrom: blue
+colorTo: green
+sdk: docker
+app_port: 7860
+pinned: false
+---
+
 # Bank Customer Churn Analysis and Prediction System
+
 
 A production-grade, end-to-end analytics and machine learning pipeline for retail banking. This system covers synthetic data engineering (SQL), predictive modeling (Python/XGBoost), business intelligence (Power BI ready files), and an interactive executive web dashboard.
 
