@@ -1,0 +1,6 @@
+CustomerId,CreditScore,Geography,Gender,Age,Tenure,Balance,NumOfProducts,HasCrCard,IsActiveMember,EstimatedSalary,Exited
+99990006,650,Maharashtra,Male,40,4,11500000.0,2,1,1,10500000.0,0
+99990007,700,Delhi,Female,33,6,0.0,1,1,0,11000000.0,1
+99990008,480,Karnataka,Male,49,3,13500000.0,2,0,1,13000000.0,0
+99990009,690,Karnataka,Female,39,7,10500000.0,1,1,1,8500000.0,0
+99990010,430,Maharashtra,Male,58,2,9000000.0,2,1,0,16500000.0,1

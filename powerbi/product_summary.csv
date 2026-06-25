@@ -1,0 +1,5 @@
+num_products,total_customers,churned_customers,churn_rate_pct
+1,5084,1409,27.71
+2,4590,348,7.58
+3,266,220,82.71
+4,60,60,100.0

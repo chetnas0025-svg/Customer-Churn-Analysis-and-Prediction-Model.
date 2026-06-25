@@ -1,0 +1,16 @@
+This is a template placeholder for the Microsoft Power BI Dashboard file (bank_churn_dashboard.pbix).
+
+Since .pbix is a proprietary Microsoft binary zip-archive format compiled exclusively by the Power BI Desktop GUI, it cannot be programmatically generated from scratch in raw code.
+
+To deploy this report in your portfolio:
+1. Open Microsoft Power BI Desktop.
+2. Select "Get Data" -> "Text/CSV" and import the CSV files in this directory:
+   - churn_master.csv
+   - geography_summary.csv
+   - age_summary.csv
+   - product_summary.csv
+   - credit_score_summary.csv
+   - model_metrics.csv
+   - prediction_history.csv
+3. Follow the complete step-by-step visual panels layout, DAX formulas, and scheduled refresh configurations detailed in 'powerbi_guide.md' to construct the 4 pages.
+4. Save the compiled report as 'bank_churn_dashboard.pbix' overwriting this placeholder.

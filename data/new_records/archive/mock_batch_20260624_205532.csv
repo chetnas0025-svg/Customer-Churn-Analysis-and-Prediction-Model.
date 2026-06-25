@@ -1,0 +1,6 @@
+CustomerId,CreditScore,Geography,Gender,Age,Tenure,Balance,NumOfProducts,HasCrCard,IsActiveMember,EstimatedSalary,Exited
+99990001,610,France,Female,45,5,120000.0,1,1,0,85000.0,1
+99990002,720,Spain,Male,34,3,0.0,2,1,1,95000.0,0
+99990003,500,Germany,Female,50,2,140000.0,3,1,0,120000.0,1
+99990004,680,Germany,Male,38,8,110000.0,1,0,1,75000.0,0
+99990005,420,France,Female,60,1,85000.0,2,1,0,180000.0,1

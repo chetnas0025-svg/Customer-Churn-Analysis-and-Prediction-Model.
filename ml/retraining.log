@@ -1,0 +1,65 @@
+[2026-06-24 20:55:33] Starting retraining pipeline...
+[2026-06-24 20:55:33] Loaded 10005 customer records from SQLite database.
+[2026-06-24 20:55:33] Fitting preprocessor pipeline on training data...
+[2026-06-24 20:55:33] Model Candidate: Logistic Regression | Test ROC-AUC: 0.7661
+[2026-06-24 20:55:33] Model Candidate: Random Forest | Test ROC-AUC: 0.8750
+[2026-06-24 20:55:41] Model Candidate: SVM | Test ROC-AUC: 0.8599
+[2026-06-24 20:55:41] Model Candidate: XGBoost | Test ROC-AUC: 0.8811
+[2026-06-24 20:55:41] Best Candidate Model: XGBoost (ROC-AUC: 0.8811)
+[2026-06-24 20:55:41] Running GridSearchCV hyperparameter tuning on XGBoost...
+[2026-06-24 20:55:47] GridSearchCV complete. Tuned ROC-AUC: 0.8800 (CV Best Score: 0.8603)
+[2026-06-24 20:55:47] Currently active model version: v1 | Active ROC-AUC: 0.8818
+[2026-06-24 20:55:47] New model ROC-AUC (0.8800) did not outperform active model v1 (0.8818). Retaining current model.
+[2026-06-24 20:55:47] REJECTED - active model performed better
+[2026-06-24 21:04:17] Starting retraining pipeline...
+[2026-06-24 21:04:17] Loaded 10005 customer records from SQLite database.
+[2026-06-24 21:04:17] Fitting preprocessor pipeline on training data...
+[2026-06-24 21:04:17] Model Candidate: Logistic Regression | Test ROC-AUC: 0.7661
+[2026-06-24 21:04:18] Model Candidate: Random Forest | Test ROC-AUC: 0.8750
+[2026-06-24 21:05:01] Model Candidate: SVM | Test ROC-AUC: 0.8599
+[2026-06-24 21:05:03] Model Candidate: XGBoost | Test ROC-AUC: 0.8811
+[2026-06-24 21:05:03] Best Candidate Model: XGBoost (ROC-AUC: 0.8811)
+[2026-06-24 21:05:03] Running GridSearchCV hyperparameter tuning on XGBoost...
+[2026-06-24 21:05:20] GridSearchCV complete. Tuned ROC-AUC: 0.8800 (CV Best Score: 0.8603)
+[2026-06-24 21:05:20] Currently active model version: v1 | Active ROC-AUC: 0.8818
+[2026-06-24 21:05:20] New model ROC-AUC (0.8800) did not outperform active model v1 (0.8818). Retaining current model.
+[2026-06-24 21:05:20] REJECTED - active model performed better
+[2026-06-24 21:08:18] Starting retraining pipeline...
+[2026-06-24 21:08:18] Loaded 10010 customer records from SQLite database.
+[2026-06-24 21:08:18] Fitting preprocessor pipeline on training data...
+[2026-06-24 21:08:18] Model Candidate: Logistic Regression | Test ROC-AUC: 0.7647
+[2026-06-24 21:08:18] Model Candidate: Random Forest | Test ROC-AUC: 0.8717
+[2026-06-24 21:08:29] Model Candidate: SVM | Test ROC-AUC: 0.8590
+[2026-06-24 21:08:29] Model Candidate: XGBoost | Test ROC-AUC: 0.8812
+[2026-06-24 21:08:29] Best Candidate Model: XGBoost (ROC-AUC: 0.8812)
+[2026-06-24 21:08:29] Running GridSearchCV hyperparameter tuning on XGBoost...
+[2026-06-24 21:08:38] GridSearchCV complete. Tuned ROC-AUC: 0.8811 (CV Best Score: 0.8588)
+[2026-06-24 21:08:38] Currently active model version: v1 | Active ROC-AUC: 0.8818
+[2026-06-24 21:08:38] New model ROC-AUC (0.8811) did not outperform active model v1 (0.8818). Retaining current model.
+[2026-06-24 21:08:38] REJECTED - active model performed better
+[2026-06-24 21:16:34] Starting retraining pipeline...
+[2026-06-24 21:16:34] Loaded 10010 customer records from SQLite database.
+[2026-06-24 21:16:34] Fitting preprocessor pipeline on training data...
+[2026-06-24 21:16:34] Model Candidate: Logistic Regression | Test ROC-AUC: 0.7647
+[2026-06-24 21:16:35] Model Candidate: Random Forest | Test ROC-AUC: 0.8717
+[2026-06-24 21:16:47] Model Candidate: SVM | Test ROC-AUC: 0.8590
+[2026-06-24 21:16:47] Model Candidate: XGBoost | Test ROC-AUC: 0.8812
+[2026-06-24 21:16:47] Best Candidate Model: XGBoost (ROC-AUC: 0.8812)
+[2026-06-24 21:16:47] Running GridSearchCV hyperparameter tuning on XGBoost...
+[2026-06-24 21:16:52] GridSearchCV complete. Tuned ROC-AUC: 0.8811 (CV Best Score: 0.8588)
+[2026-06-24 21:16:52] Currently active model version: v1 | Active ROC-AUC: 0.8818
+[2026-06-24 21:16:52] New model ROC-AUC (0.8811) did not outperform active model v1 (0.8818). Retaining current model.
+[2026-06-24 21:16:52] REJECTED - active model performed better
+[2026-06-25 10:08:15] Starting retraining pipeline...
+[2026-06-25 10:08:15] Loaded 10000 customer records from SQLite database.
+[2026-06-25 10:08:15] Fitting preprocessor pipeline on training data...
+[2026-06-25 10:08:16] Model Candidate: Logistic Regression | Test ROC-AUC: 0.8601
+[2026-06-25 10:08:16] Model Candidate: Random Forest | Test ROC-AUC: 0.8731
+[2026-06-25 10:08:34] Model Candidate: SVM | Test ROC-AUC: 0.8605
+[2026-06-25 10:08:35] Model Candidate: XGBoost | Test ROC-AUC: 0.8849
+[2026-06-25 10:08:35] Best Candidate Model: XGBoost (ROC-AUC: 0.8849)
+[2026-06-25 10:08:35] Running GridSearchCV hyperparameter tuning on XGBoost...
+[2026-06-25 10:08:50] GridSearchCV complete. Tuned ROC-AUC: 0.8884 (CV Best Score: 0.8568)
+[2026-06-25 10:08:50] Currently active model version: v3 | Active ROC-AUC: 0.8884
+[2026-06-25 10:08:50] New model ROC-AUC (0.8884) did not outperform active model v3 (0.8884). Retaining current model.
+[2026-06-25 10:08:50] REJECTED - active model performed better

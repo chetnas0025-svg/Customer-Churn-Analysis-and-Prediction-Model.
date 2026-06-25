@@ -1,0 +1,1053 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bank Customer Churn Analytics & Prediction System</title>
+    <!-- Google Fonts: Inter -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <!-- Chart.js -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        :root {
+            --bg-color: #080c14;
+            --panel-bg: #111827;
+            --panel-border: rgba(255, 255, 255, 0.07);
+            --text-primary: #f3f4f6;
+            --text-secondary: #9ca3af;
+            --accent-blue: #3b82f6;
+            --accent-teal: #10b981;
+            --accent-red: #ef4444;
+            --accent-yellow: #f59e0b;
+            --font-main: 'Inter', sans-serif;
+            --glow-color: rgba(59, 130, 246, 0.15);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background-color: var(--bg-color);
+            color: var(--text-primary);
+            font-family: var(--font-main);
+            line-height: 1.5;
+            padding: 2rem;
+        }
+
+        header {
+            margin-bottom: 2.5rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid var(--panel-border);
+            padding-bottom: 1.5rem;
+        }
+
+        .logo-area h1 {
+            font-size: 1.75rem;
+            font-weight: 700;
+            background: linear-gradient(135deg, #60a5fa 0%, #34d399 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 0.25rem;
+        }
+
+        .logo-area p {
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+        }
+
+        .badge-system {
+            background: rgba(16, 185, 129, 0.1);
+            color: var(--accent-teal);
+            padding: 0.4rem 1rem;
+            border-radius: 50px;
+            font-size: 0.85rem;
+            font-weight: 600;
+            border: 1px solid rgba(16, 185, 129, 0.2);
+            box-shadow: 0 0 15px rgba(16, 185, 129, 0.1);
+        }
+
+        /* KPI Layout */
+        .kpi-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 2.5rem;
+        }
+
+        .kpi-card {
+            background: var(--panel-bg);
+            border: 1px solid var(--panel-border);
+            border-radius: 12px;
+            padding: 1.5rem;
+            position: relative;
+            overflow: hidden;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+        }
+
+        .kpi-card:hover {
+            transform: translateY(-4px);
+            border-color: rgba(59, 130, 246, 0.3);
+            box-shadow: 0 10px 20px -5px rgba(0, 0, 0, 0.3), 0 0 15px var(--glow-color);
+        }
+
+        .kpi-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 4px;
+            height: 100%;
+            background: var(--accent-blue);
+        }
+
+        .kpi-card.churn-card::before { background: var(--accent-red); }
+        .kpi-card.balance-card::before { background: var(--accent-teal); }
+        .kpi-card.credit-card::before { background: var(--accent-yellow); }
+
+        .kpi-title {
+            font-size: 0.85rem;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            color: var(--text-secondary);
+            margin-bottom: 0.5rem;
+            font-weight: 600;
+        }
+
+        .kpi-value {
+            font-size: 1.8rem;
+            font-weight: 700;
+            color: var(--text-primary);
+        }
+
+        /* Main Grid */
+        .dashboard-grid {
+            display: grid;
+            grid-template-columns: 2fr 1fr;
+            gap: 2rem;
+            margin-bottom: 2.5rem;
+        }
+
+        @media (max-width: 1024px) {
+            .dashboard-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .charts-container {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 1.5rem;
+        }
+
+        @media (max-width: 640px) {
+            .charts-container {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .panel {
+            background: var(--panel-bg);
+            border: 1px solid var(--panel-border);
+            border-radius: 12px;
+            padding: 1.5rem;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+        }
+
+        .panel-header {
+            margin-bottom: 1.5rem;
+            border-bottom: 1px solid var(--panel-border);
+            padding-bottom: 0.75rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .panel-title {
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: var(--text-primary);
+        }
+
+        .chart-wrapper {
+            position: relative;
+            height: 250px;
+            width: 100%;
+        }
+
+        /* Prediction Form Panel */
+        .prediction-panel {
+            display: flex;
+            flex-direction: column;
+            height: 100%;
+        }
+
+        .form-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1rem;
+        }
+
+        @media (max-width: 480px) {
+            .form-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .form-group {
+            margin-bottom: 0.8rem;
+        }
+
+        .form-group.full-width {
+            grid-column: span 2;
+        }
+
+        @media (max-width: 480px) {
+            .form-group.full-width {
+                grid-column: span 1;
+            }
+        }
+
+        label {
+            display: block;
+            font-size: 0.8rem;
+            color: var(--text-secondary);
+            margin-bottom: 0.3rem;
+            font-weight: 500;
+        }
+
+        input, select {
+            width: 100%;
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid var(--panel-border);
+            border-radius: 6px;
+            padding: 0.5rem 0.75rem;
+            color: var(--text-primary);
+            font-family: var(--font-main);
+            font-size: 0.85rem;
+            transition: all 0.2s ease;
+        }
+
+        input:focus, select:focus {
+            outline: none;
+            border-color: var(--accent-blue);
+            box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.2);
+            background: rgba(255, 255, 255, 0.05);
+        }
+
+        .btn-predict {
+            width: 100%;
+            background: linear-gradient(135deg, var(--accent-blue) 0%, #2563eb 100%);
+            color: white;
+            border: none;
+            border-radius: 6px;
+            padding: 0.75rem;
+            font-weight: 600;
+            font-size: 0.9rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin-top: 1rem;
+            box-shadow: 0 4px 6px -1px rgba(59, 130, 246, 0.2);
+        }
+
+        .btn-predict:hover {
+            opacity: 0.95;
+            transform: translateY(-1px);
+            box-shadow: 0 10px 15px -3px rgba(59, 130, 246, 0.3);
+        }
+
+        /* Result Presentation */
+        .result-container {
+            margin-top: 1.5rem;
+            padding: 1.25rem;
+            background: rgba(255, 255, 255, 0.02);
+            border: 1px dashed var(--panel-border);
+            border-radius: 8px;
+            text-align: center;
+            display: none;
+            animation: fadeIn 0.4s ease;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .result-title {
+            font-size: 0.9rem;
+            color: var(--text-secondary);
+            margin-bottom: 0.5rem;
+        }
+
+        .result-prob {
+            font-size: 2.25rem;
+            font-weight: 800;
+            margin-bottom: 0.5rem;
+        }
+
+        .risk-badge {
+            display: inline-block;
+            padding: 0.4rem 1.25rem;
+            border-radius: 50px;
+            font-weight: 700;
+            font-size: 0.85rem;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+
+        .risk-badge.success {
+            background-color: rgba(16, 185, 129, 0.1);
+            color: var(--accent-teal);
+            border: 1px solid rgba(16, 185, 129, 0.2);
+        }
+
+        .risk-badge.warning {
+            background-color: rgba(245, 158, 11, 0.1);
+            color: var(--accent-yellow);
+            border: 1px solid rgba(245, 158, 11, 0.2);
+        }
+
+        .risk-badge.danger {
+            background-color: rgba(239, 68, 68, 0.1);
+            color: var(--accent-red);
+            border: 1px solid rgba(239, 68, 68, 0.2);
+        }
+
+        /* Model Drift Banner */
+        .drift-banner {
+            background: linear-gradient(90deg, #f59e0b 0%, #ef4444 100%);
+            color: white;
+            padding: 0.75rem 1.5rem;
+            border-radius: 8px;
+            margin-bottom: 2rem;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            font-weight: 600;
+            font-size: 0.95rem;
+            box-shadow: 0 4px 10px rgba(239, 68, 68, 0.2);
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.01); }
+            100% { transform: scale(1); }
+        }
+
+        /* Administrative Control Panel */
+        .admin-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 2.5rem;
+        }
+
+        .admin-card {
+            background: var(--panel-bg);
+            border: 1px solid var(--panel-border);
+            border-radius: 12px;
+            padding: 1.5rem;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+        }
+
+        .admin-kpi-row {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 0.75rem;
+            font-size: 0.9rem;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.03);
+            padding-bottom: 0.5rem;
+        }
+
+        .admin-kpi-row:last-child {
+            border-bottom: none;
+            padding-bottom: 0;
+        }
+
+        .admin-label {
+            color: var(--text-secondary);
+        }
+
+        .admin-val {
+            font-weight: 600;
+        }
+
+        .btn-retrain {
+            background: linear-gradient(135deg, var(--accent-teal) 0%, #059669 100%);
+            color: white;
+            border: none;
+            border-radius: 6px;
+            padding: 0.6rem 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            width: 100%;
+            transition: all 0.2s ease;
+            box-shadow: 0 4px 6px rgba(16, 185, 129, 0.15);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .btn-retrain:hover {
+            opacity: 0.95;
+            transform: translateY(-1px);
+        }
+
+        .uploader-wrapper {
+            display: flex;
+            gap: 0.5rem;
+            align-items: center;
+        }
+
+        .file-input-wrapper {
+            position: relative;
+            flex-grow: 1;
+        }
+
+        .file-input-wrapper input[type="file"] {
+            position: absolute;
+            left: 0;
+            top: 0;
+            opacity: 0;
+            width: 100%;
+            height: 100%;
+            cursor: pointer;
+        }
+
+        .file-input-label {
+            display: block;
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px dashed var(--panel-border);
+            padding: 0.5rem;
+            border-radius: 6px;
+            font-size: 0.8rem;
+            cursor: pointer;
+            text-align: center;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+            color: var(--text-secondary);
+        }
+
+        .btn-upload {
+            background: var(--accent-blue);
+            color: white;
+            border: none;
+            border-radius: 6px;
+            padding: 0.6rem 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .btn-upload:hover {
+            opacity: 0.9;
+        }
+
+        .spinner {
+            border: 3px solid rgba(255,255,255,0.3);
+            border-radius: 50%;
+            border-top: 3px solid white;
+            width: 16px;
+            height: 16px;
+            animation: spin 1s linear infinite;
+            display: none;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        /* Models Table Panel */
+        .table-panel {
+            margin-bottom: 2.5rem;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 0.9rem;
+        }
+
+        th {
+            background: rgba(255, 255, 255, 0.02);
+            color: var(--text-secondary);
+            font-weight: 600;
+            text-align: left;
+            padding: 0.75rem 1rem;
+            border-bottom: 2px solid var(--panel-border);
+        }
+
+        td {
+            padding: 0.75rem 1rem;
+            border-bottom: 1px solid var(--panel-border);
+        }
+
+        tr:last-child td {
+            border-bottom: none;
+        }
+
+        tr:hover td {
+            background: rgba(255, 255, 255, 0.01);
+        }
+
+        .model-highlight {
+            color: var(--accent-teal);
+            font-weight: 600;
+        }
+
+        .model-badge {
+            background: rgba(59, 130, 246, 0.1);
+            color: var(--accent-blue);
+            padding: 0.2rem 0.5rem;
+            border-radius: 4px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            border: 1px solid rgba(59, 130, 246, 0.2);
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <div class="logo-area">
+            <h1>Bank Customer Churn Analytics Dashboard</h1>
+            <p>Intelligence Platform &bull; SQLite Data Store &bull; Machine Learning Engine</p>
+        </div>
+        <div class="badge-system">
+            Model Active: {{ best_model_name }}
+        </div>
+    </header>
+
+    <!-- Model Drift Alert Banner -->
+    {% if drift_warning %}
+    <div class="drift-banner" id="driftBanner">
+        <span>⚠️ WARNING: Model prediction distribution drift detected (Magnitude: {{ drift_pct }}). The current customer population churn profile has drifted. Retraining recommended.</span>
+    </div>
+    {% endif %}
+
+    <!-- Administrative Control Panel -->
+    <div class="admin-grid">
+        <!-- Card 1: Active Model Metadata -->
+        <div class="admin-card">
+            <div class="panel-header" style="margin-bottom: 1rem; padding-bottom: 0.5rem; border-bottom: 1px solid var(--panel-border);">
+                <h4 class="panel-title" style="font-size: 0.95rem;">Model Registry Status</h4>
+            </div>
+            <div class="admin-kpi-row">
+                <span class="admin-label">Model Version</span>
+                <span class="admin-val" style="color: var(--accent-blue);">{{ version_info.version }}</span>
+            </div>
+            <div class="admin-kpi-row">
+                <span class="admin-label">Last Training Date</span>
+                <span class="admin-val">{{ version_info.training_date }}</span>
+            </div>
+            <div class="admin-kpi-row">
+                <span class="admin-label">Training Set Size</span>
+                <span class="admin-val">{{ version_info.dataset_size }} rows</span>
+            </div>
+            <div class="admin-kpi-row">
+                <span class="admin-label">Active ROC-AUC</span>
+                <span class="admin-val" style="color: var(--accent-teal);">{{ version_info.roc_auc }}</span>
+            </div>
+        </div>
+
+        <!-- Card 2: Batch Data Ingestion -->
+        <div class="admin-card">
+            <div class="panel-header" style="margin-bottom: 1rem; padding-bottom: 0.5rem; border-bottom: 1px solid var(--panel-border);">
+                <h4 class="panel-title" style="font-size: 0.95rem;">Batch Data Ingestion</h4>
+            </div>
+            <p style="font-size: 0.8rem; color: var(--text-secondary); margin-bottom: 1rem;">
+                Upload a new customer batch CSV to append records and queue automated model retraining.
+            </p>
+            <form id="uploadForm" enctype="multipart/form-data">
+                <div class="uploader-wrapper">
+                    <div class="file-input-wrapper">
+                        <span class="file-input-label" id="fileLabel">Select CSV File...</span>
+                        <input type="file" id="batchFile" name="file" accept=".csv" required onchange="document.getElementById('fileLabel').innerText = this.files[0].name">
+                    </div>
+                    <button type="submit" class="btn-upload">Upload</button>
+                </div>
+            </form>
+        </div>
+
+        <!-- Card 3: Continuous Retraining Controls -->
+        <div class="admin-card">
+            <div class="panel-header" style="margin-bottom: 1rem; padding-bottom: 0.5rem; border-bottom: 1px solid var(--panel-border);">
+                <h4 class="panel-title" style="font-size: 0.95rem;">Retraining Operations</h4>
+            </div>
+            <div class="admin-kpi-row" style="margin-bottom: 1rem;">
+                <span class="admin-label">Population Drift</span>
+                <span class="admin-val" style="color: {% if drift_warning %}var(--accent-red){% else %}var(--accent-teal){% endif %}; font-weight: 700;">{{ drift_pct }}</span>
+            </div>
+            <button type="button" class="btn-retrain" id="btnRetrain">
+                <div class="spinner" id="retrainSpinner"></div>
+                <span id="retrainText">Trigger Model Retraining</span>
+            </button>
+        </div>
+    </div>
+
+    <!-- KPI Summary Section -->
+    <div class="kpi-container">
+        <div class="kpi-card">
+            <div class="kpi-title">Total Customers</div>
+            <div class="kpi-value">{{ kpis.total_customers }}</div>
+        </div>
+        <div class="kpi-card churn-card">
+            <div class="kpi-title">Overall Churn Rate</div>
+            <div class="kpi-value">{{ kpis.churn_rate }}</div>
+        </div>
+        <div class="kpi-card balance-card">
+            <div class="kpi-title">Average Account Balance</div>
+            <div class="kpi-value">{{ kpis.avg_balance }}</div>
+        </div>
+        <div class="kpi-card credit-card">
+            <div class="kpi-title">Average Credit Score</div>
+            <div class="kpi-value">{{ kpis.avg_credit_score }}</div>
+        </div>
+    </div>
+
+    <!-- Main Grid Section -->
+    <div class="dashboard-grid">
+        <!-- Visualizations Column -->
+        <div class="charts-container">
+            <div class="panel">
+                <div class="panel-header">
+                    <h3 class="panel-title">Churn by Geography</h3>
+                </div>
+                <div class="chart-wrapper">
+                    <canvas id="geoChart"></canvas>
+                </div>
+            </div>
+
+            <div class="panel">
+                <div class="panel-header">
+                    <h3 class="panel-title">Churn by Age Group</h3>
+                </div>
+                <div class="chart-wrapper">
+                    <canvas id="ageChart"></canvas>
+                </div>
+            </div>
+
+            <div class="panel">
+                <div class="panel-header">
+                    <h3 class="panel-title">Churn by Number of Products</h3>
+                </div>
+                <div class="chart-wrapper">
+                    <canvas id="productChart"></canvas>
+                </div>
+            </div>
+
+            <div class="panel">
+                <div class="panel-header">
+                    <h3 class="panel-title">Credit Score Distribution</h3>
+                </div>
+                <div class="chart-wrapper">
+                    <canvas id="creditChart"></canvas>
+                </div>
+            </div>
+        </div>
+
+        <!-- Live Prediction Form Column -->
+        <div class="panel prediction-panel">
+            <div class="panel-header">
+                <h3 class="panel-title">Interactive Churn Predictor</h3>
+            </div>
+            <form id="predictionForm">
+                <div class="form-grid">
+                    <div class="form-group">
+                        <label for="credit_score">Credit Score (350-850)</label>
+                        <input type="number" id="credit_score" name="credit_score" min="350" max="850" value="650" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="age">Age (18-100)</label>
+                        <input type="number" id="age" name="age" min="18" max="100" value="39" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="geography">Geography</label>
+                        <select id="geography" name="geography" required>
+                            <option value="Maharashtra" selected>Maharashtra</option>
+                            <option value="Karnataka">Karnataka</option>
+                            <option value="Delhi">Delhi</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="gender">Gender</label>
+                        <select id="gender" name="gender" required>
+                            <option value="Male" selected>Male</option>
+                            <option value="Female">Female</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="balance">Balance (₹)</label>
+                        <input type="number" id="balance" name="balance" min="0" step="0.01" value="8500000" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="num_products">Number of Products</label>
+                        <select id="num_products" name="num_products" required>
+                            <option value="1">1 Product</option>
+                            <option value="2" selected>2 Products</option>
+                            <option value="3">3 Products</option>
+                            <option value="4">4 Products</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="tenure">Tenure (Years)</label>
+                        <input type="number" id="tenure" name="tenure" min="0" max="10" value="3" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="estimated_salary">Estimated Salary (₹)</label>
+                        <input type="number" id="estimated_salary" name="estimated_salary" min="0" step="0.01" value="10000000" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="has_credit_card">Has Credit Card?</label>
+                        <select id="has_credit_card" name="has_credit_card" required>
+                            <option value="1" selected>Yes</option>
+                            <option value="0">No</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="is_active_member">Is Active Member?</label>
+                        <select id="is_active_member" name="is_active_member" required>
+                            <option value="1" selected>Yes</option>
+                            <option value="0">No</option>
+                        </select>
+                    </div>
+                </div>
+                <button type="submit" class="btn-predict">Predict Churn Risk</button>
+            </form>
+
+            <div class="result-container" id="resultContainer">
+                <div class="result-title">Predicted Churn Probability</div>
+                <div class="result-prob" id="resultProb">0.0%</div>
+                <div class="risk-badge" id="resultBadge">LOW RISK</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Models Table Section -->
+    <div class="panel table-panel">
+        <div class="panel-header">
+            <h3 class="panel-title">Model Benchmarks Comparison</h3>
+        </div>
+        <div style="overflow-x: auto;">
+            <table>
+                <thead>
+                    <tr>
+                        <th>Model Name</th>
+                        <th>Accuracy</th>
+                        <th>Precision</th>
+                        <th>Recall</th>
+                        <th>F1-Score</th>
+                        <th>ROC-AUC (Target)</th>
+                        <th>Status</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for m in models_metrics %}
+                    <tr>
+                        <td><span class="model-badge">{{ m['Model'] }}</span></td>
+                        <td>{{ m['Accuracy'] }}</td>
+                        <td>{{ m['Precision'] }}</td>
+                        <td>{{ m['Recall'] }}</td>
+                        <td>{{ m['F1-Score'] }}</td>
+                        <td><span class="{% if m['Model'] == best_model_name %}model-highlight{% endif %}">{{ m['ROC-AUC'] }}</span></td>
+                        <td>
+                            {% if m['Model'] == best_model_name %}
+                            <span style="color: var(--accent-teal); font-weight: 600;">Active & Fine-Tuned</span>
+                            {% else %}
+                            <span style="color: var(--text-secondary);">Standby</span>
+                            {% endif %}
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <!-- Chart Scripts -->
+    <script>
+        // Set chart default styling
+        Chart.defaults.color = '#9ca3af';
+        Chart.defaults.borderColor = 'rgba(255, 255, 255, 0.05)';
+
+        // 1. Churn by Geography (Doughnut Chart)
+        const geoCtx = document.getElementById('geoChart').getContext('2d');
+        new Chart(geoCtx, {
+            type: 'doughnut',
+            data: {
+                labels: {{ geo_data.labels | tojson }},
+                datasets: [{
+                    label: 'Churn Rate (%)',
+                    data: {{ geo_data.rates | tojson }},
+                    backgroundColor: [
+                        'rgba(59, 130, 246, 0.75)', // Blue for Maharashtra
+                        'rgba(239, 68, 68, 0.75)',  // Red for Karnataka
+                        'rgba(245, 158, 11, 0.75)'  // Yellow for Delhi
+                    ],
+                    borderColor: '#111827',
+                    borderWidth: 2
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: {
+                        position: 'bottom',
+                        labels: {
+                            boxWidth: 12,
+                            padding: 15
+                        }
+                    },
+                    tooltip: {
+                        callbacks: {
+                            label: function(context) {
+                                return ` Churn Rate: ${context.raw}%`;
+                            }
+                        }
+                    }
+                }
+            }
+        });
+
+        // 2. Churn by Age Group (Grouped Bar Chart)
+        const ageCtx = document.getElementById('ageChart').getContext('2d');
+        new Chart(ageCtx, {
+            type: 'bar',
+            data: {
+                labels: {{ age_data.labels | tojson }},
+                datasets: [
+                    {
+                        label: 'Retained',
+                        data: {{ age_data.retained | tojson }},
+                        backgroundColor: 'rgba(16, 185, 129, 0.75)'
+                    },
+                    {
+                        label: 'Churned',
+                        data: {{ age_data.churned | tojson }},
+                        backgroundColor: 'rgba(239, 68, 68, 0.75)'
+                    }
+                ]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                scales: {
+                    x: { stacked: true },
+                    y: { stacked: true }
+                },
+                plugins: {
+                    legend: { position: 'bottom', labels: { boxWidth: 12 } }
+                }
+            }
+        });
+
+        // 3. Churn by Number of Products (Bar Chart of Churn Rate)
+        const prodCtx = document.getElementById('productChart').getContext('2d');
+        new Chart(prodCtx, {
+            type: 'bar',
+            data: {
+                labels: {{ prod_data.labels | tojson }},
+                datasets: [{
+                    label: 'Churn Rate (%)',
+                    data: {{ prod_data.rates | tojson }},
+                    backgroundColor: 'rgba(59, 130, 246, 0.75)',
+                    borderWidth: 0
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                        ticks: {
+                            callback: function(value) { return value + "%"; }
+                        }
+                    }
+                },
+                plugins: {
+                    legend: { display: false }
+                }
+            }
+        });
+
+        // 4. Credit Score Distribution split by churn (Stacked Column)
+        const creditCtx = document.getElementById('creditChart').getContext('2d');
+        new Chart(creditCtx, {
+            type: 'bar',
+            data: {
+                labels: {{ credit_data.labels | tojson }},
+                datasets: [
+                    {
+                        label: 'Retained',
+                        data: {{ credit_data.retained | tojson }},
+                        backgroundColor: 'rgba(16, 185, 129, 0.75)'
+                    },
+                    {
+                        label: 'Churned',
+                        data: {{ credit_data.churned | tojson }},
+                        backgroundColor: 'rgba(239, 68, 68, 0.75)'
+                    }
+                ]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                scales: {
+                    x: { stacked: true },
+                    y: { stacked: true }
+                },
+                plugins: {
+                    legend: { position: 'bottom', labels: { boxWidth: 12 } }
+                }
+            }
+        });
+
+        // Prediction Form Submit Handler via fetch AJAX
+        document.getElementById('predictionForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            const payload = {
+                credit_score: document.getElementById('credit_score').value,
+                age: document.getElementById('age').value,
+                geography: document.getElementById('geography').value,
+                gender: document.getElementById('gender').value,
+                balance: document.getElementById('balance').value,
+                num_products: document.getElementById('num_products').value,
+                tenure: document.getElementById('tenure').value,
+                estimated_salary: document.getElementById('estimated_salary').value,
+                has_credit_card: document.getElementById('has_credit_card').value,
+                is_active_member: document.getElementById('is_active_member').value
+            };
+
+            fetch('/predict', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(payload)
+            })
+            .then(res => res.json())
+            .then(data => {
+                if (data.success) {
+                    const container = document.getElementById('resultContainer');
+                    const probEl = document.getElementById('resultProb');
+                    const badgeEl = document.getElementById('resultBadge');
+                    
+                    probEl.innerText = data.probability + '%';
+                    badgeEl.innerText = data.risk_label + ' RISK';
+                    
+                    // Reset badge color classes
+                    badgeEl.className = 'risk-badge';
+                    badgeEl.classList.add(data.color_class);
+                    
+                    // Display probability color
+                    if (data.risk_label === 'High') {
+                        probEl.style.color = 'var(--accent-red)';
+                    } else if (data.risk_label === 'Medium') {
+                        probEl.style.color = 'var(--accent-yellow)';
+                    } else {
+                        probEl.style.color = 'var(--accent-teal)';
+                    }
+                    
+                    container.style.display = 'block';
+                } else {
+                    alert('Prediction Error: ' + data.error);
+                }
+            })
+            .catch(err => {
+                console.error(err);
+                alert('Connection to Prediction API failed.');
+            });
+        });
+
+        // Upload batch CSV form handler
+        document.getElementById('uploadForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            const formData = new FormData();
+            const fileField = document.getElementById('batchFile');
+            
+            if (fileField.files.length === 0) {
+                alert("Please select a CSV file first.");
+                return;
+            }
+            
+            formData.append('file', fileField.files[0]);
+            
+            const uploadBtn = this.querySelector('.btn-upload');
+            const originalText = uploadBtn.innerText;
+            uploadBtn.innerText = "Uploading...";
+            uploadBtn.disabled = true;
+            
+            fetch('/upload', {
+                method: 'POST',
+                body: formData
+            })
+            .then(res => res.json())
+            .then(data => {
+                uploadBtn.innerText = originalText;
+                uploadBtn.disabled = false;
+                
+                if (data.success) {
+                    alert(`Batch Ingested Successfully! Added ${data.rows_added} new rows. ${data.message}`);
+                    window.location.reload(); // Reload dashboard to show fresh stats and drift warning!
+                } else {
+                    alert('Ingestion failed: ' + data.error);
+                }
+            })
+            .catch(err => {
+                uploadBtn.innerText = originalText;
+                uploadBtn.disabled = false;
+                console.error(err);
+                alert('Connection to Upload API failed.');
+            });
+        });
+
+        // Trigger manual model retraining handler
+        document.getElementById('btnRetrain').addEventListener('click', function() {
+            const spinner = document.getElementById('retrainSpinner');
+            const text = document.getElementById('retrainText');
+            const btn = document.getElementById('btnRetrain');
+            
+            spinner.style.display = 'block';
+            text.innerText = 'Retraining Model...';
+            btn.disabled = true;
+            
+            fetch('/retrain', {
+                method: 'POST'
+            })
+            .then(res => res.json())
+            .then(data => {
+                spinner.style.display = 'none';
+                text.innerText = 'Trigger Model Retraining';
+                btn.disabled = false;
+                
+                if (data.success) {
+                    alert(`Retraining Completed! Status: ${data.message}`);
+                    window.location.reload(); // Reload to show new version parameters!
+                } else {
+                    alert('Retraining failed: ' + data.error);
+                }
+            })
+            .catch(err => {
+                spinner.style.display = 'none';
+                text.innerText = 'Trigger Model Retraining';
+                btn.disabled = false;
+                console.error(err);
+                alert('Connection to Retrain API failed.');
+            });
+        });
+    </script>
+</body>
+</html>

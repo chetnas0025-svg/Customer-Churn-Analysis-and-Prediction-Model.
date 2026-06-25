@@ -1,0 +1,25 @@
+# Python Cache
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+.pytest_cache/
+.ipynb_checkpoints/
+
+# Virtual Environment
+venv/
+.venv/
+env/
+ENV/
+
+# Model development temp files
+ml/temp_data/
+
+# IDE settings
+.vscode/
+.idea/
+
+# OS specific files
+.DS_Store
+Thumbs.db
+Desktop.ini

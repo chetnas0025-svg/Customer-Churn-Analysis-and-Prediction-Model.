@@ -1,0 +1,4 @@
+version,training_date,dataset_size,roc_auc,model_path,preprocessor_path,is_active
+v1,2026-06-24 20:50:33,10000,0.8818,models/versions/model_v1.pkl,models/versions/preprocessor_v1.pkl,0
+v2,2026-06-25 09:52:03,10000,0.8813,models/versions/model_v2.pkl,models/versions/preprocessor_v2.pkl,0
+v3,2026-06-25 10:07:40,10000,0.8884,models/versions/model_v3.pkl,models/versions/preprocessor_v3.pkl,1
