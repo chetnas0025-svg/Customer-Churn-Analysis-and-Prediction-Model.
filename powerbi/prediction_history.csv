@@ -25,3 +25,4 @@ prediction_id,timestamp,credit_score,geography,gender,age,tenure,balance,num_pro
 24,2026-06-25 04:42:35,650,Maharashtra,Male,39,3,8500000.0,2,1,1,1000000.0,8.05,Low
 25,2026-06-25 04:43:21,367,Delhi,Female,67,10,30000.0,1,1,1,35000.0,21.54,Low
 26,2026-06-25 04:43:23,367,Delhi,Female,67,10,30000.0,1,1,1,35000.0,21.54,Low
+27,2026-06-25 05:22:56,650,Maharashtra,Male,39,3,8500000.0,2,1,1,10000000.0,6.52,Low
