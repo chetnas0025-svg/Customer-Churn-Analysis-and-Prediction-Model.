@@ -14,8 +14,9 @@ RUN pip install --no-cache-dir -r requirements.txt
 # Copy the entire workspace into the container
 COPY . .
 
-# Expose port 5000 (standard Flask port)
-EXPOSE 5000
+# Expose port 7860 (Hugging Face Spaces default port)
+EXPOSE 7860
 
 # Run the production Gunicorn server
-CMD ["gunicorn", "--bind", "0.0.0.0:5000", "dashboard.app:app"]
+CMD ["gunicorn", "--bind", "0.0.0.0:7860", "dashboard.app:app"]
+
